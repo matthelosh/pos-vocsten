@@ -20,6 +20,21 @@
               </div>
             </div>
           </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <div class="form-line">
+                <select class="form-control show-tick" data-live-search="true" name="pelanggan" id="pelanggan" required>
+                    <option value="Umum"> -- Umum -- </option>
+                    <?php
+                      $sql = mysqli_query($koneksi, "SELECT * FROM tb_pelanggan");
+                      while($b = mysqli_fetch_assoc($sql)) {
+                        echo "<option value='$b[id_pelanggan]'>$b[nama]</option>";
+                      }
+                    ?>
+                </select>
+              </div>
+            </div>
+          </div>
           <div class="stok" style="display:none">
             <div class="col-md-1">
                 <input type="number" name="stok" value="" placeholder="Stok" class="form-control" required disabled>

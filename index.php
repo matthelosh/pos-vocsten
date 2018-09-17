@@ -138,7 +138,7 @@
                                                             <i class=\"material-icons\">warning</i>
                                                         </div>
                                                         <div class=\"menu-info\">
-                                                            <h4>".$r['kd_brg']."</h4>
+                                                            <h4>".$r['nama_barang']."</h4>
                                                             <p style=\"color:red;\">Stok tinggal ".$r['jml']." ".$r['satuan']."</p>
                                                         </div>
                                                     </a>
@@ -152,85 +152,7 @@
                         </ul>
                     </li>
                     <!-- #END# Notifications -->
-                    <!-- Tasks -->
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                            <i class="material-icons">flag</i>
-                            <span class="label-count">9</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="header">TASKS</li>
-                            <li class="body">
-                                <ul class="menu tasks">
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <h4>
-                                                Footer display issue
-                                                <small>32%</small>
-                                            </h4>
-                                            <div class="progress">
-                                                <div class="progress-bar bg-pink" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 32%">
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <h4>
-                                                Make new buttons
-                                                <small>45%</small>
-                                            </h4>
-                                            <div class="progress">
-                                                <div class="progress-bar bg-cyan" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <h4>
-                                                Create new dashboard
-                                                <small>54%</small>
-                                            </h4>
-                                            <div class="progress">
-                                                <div class="progress-bar bg-teal" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 54%">
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <h4>
-                                                Solve transition issue
-                                                <small>65%</small>
-                                            </h4>
-                                            <div class="progress">
-                                                <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 65%">
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <h4>
-                                                Answer GitHub questions
-                                                <small>92%</small>
-                                            </h4>
-                                            <div class="progress">
-                                                <div class="progress-bar bg-purple" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 92%">
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="footer">
-                                <a href="javascript:void(0);">View All Tasks</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- #END# Tasks -->
-                    <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li>
+                    <li class="pull-right"><a href="?page=settings" class="js-right-sidebar" data-close="true"><i class="material-icons">settings</i></a></li>
                 </ul>
             </div>
         </div>
@@ -246,7 +168,7 @@
                 </div>
                 <div class="info-container">
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $_SESSION['user']; ?></div>
-                    <div class="email"><?php echo $_SESSION['nama']; ?></div>
+                    <div class="email"><?php echo $_SESSION['level']; ?></div>
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
@@ -266,11 +188,30 @@
                             <span>Home</span>
                         </a>
                     </li>
+                    <?php
+                      if ($_SESSION['level'] == 'admin' || $_SESSION['level'] == 'kasir') { ?>
                     <li>
-                        <a href="?page=penjualan">
-                            <i class="material-icons">local_atm</i>
-                            <span>Penjualan</span>
-                        </a>
+                      <a href="javascript:void(0);" class="menu-toggle">
+                        <i class="material-icons">local_atm</i>
+                          <span>Penjualan</span>
+                      </a>
+                      
+                      <ul class="ml-menu">
+                      
+                        <li>
+                            <a href="?page=penjualan">
+                                <i class="material-icons">shopping_cart</i>
+                                <span>Barang</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="?page=service">
+                                <i class="material-icons">build</i>
+                                <span>Jasa Service</span>
+                            </a>
+                        </li>
+                             
+                      </ul>  
                     </li>
                     <!--<li>
                         <a href="?page=pelanggan">
@@ -306,29 +247,54 @@
                     </li>
 
                 <?php
+                    }
                   if ($_SESSION['level'] == 'admin') { ?>
-                    <li>
-                        <a href="?page=barang">
-                            <i class="material-icons">view_module</i>
-                            <span>Barang</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="?page=pelanggan">
-                            <i class="material-icons">supervisor_account</i>
-                            <span>Pelanggan</span>
-                        </a>
-                    </li>
-                    
-                    <li>
-                        <a href="?page=user">
-                            <i class="material-icons">account_circle</i>
-                            <span>Pengguna</span>
-                        </a>
+                   <li>
+                      <a href="javascript:void(0);" class="menu-toggle">
+                        <i class="material-icons">dashboard</i>
+                          <span>Data Master</span>
+                      </a>
+                      <ul class="ml-menu">
+                        <li>
+                            <a href="?page=barang">
+                                <i class="material-icons">view_module</i>
+                                <span>Barang</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="?page=jasa">
+                                <i class="material-icons">build</i>
+                                <span>Jasa</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="?page=pelanggan">
+                                <i class="material-icons">supervisor_account</i>
+                                <span>Pelanggan</span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="?page=user">
+                                <i class="material-icons">account_circle</i>
+                                <span>Pengguna</span>
+                            </a>
+                        </li>
+                        </ul>
                     </li>
                   <?php
+
                   }
+                  if ($_SESSION['level'] == 'admin' || $_SESSION['level'] == 'teknisi') { 
                     ?>
+                    <li>
+                            <a href="?page=servicing">
+                                <i class="material-icons">build</i>
+                                <span>Service</span>
+                            </a>
+                        </li>
+
+                  <?php } ?>
                 </ul>
             </div>
             <!-- #Menu -->
@@ -362,6 +328,9 @@
                     case "barang":
                       include 'pages/barang/barang.php';
                     break;
+                    case "jasa":
+                      include 'pages/jasa/jasa.php';
+                    break;
                     case "add_stok":
                       include 'pages/barang/comps/form_stok.php';
                     break;
@@ -382,6 +351,12 @@
                     break;
                     case "jurnal":
                       include 'pages/laporan/jurnal.php';
+                    break;
+                    case "servicing":
+                      include 'pages/teknisi/service.php';
+                    break;
+                    case "settings":
+                      include 'pages/settings.php';
                     break;
                   }
                 ?>

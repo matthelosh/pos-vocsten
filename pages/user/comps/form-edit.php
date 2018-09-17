@@ -58,6 +58,7 @@ $data = mysqli_fetch_assoc($sqledit);
                 <option value="admin" <?php echo $selected = ($data['level'] == 'admin')?'selected': '';?>>Admin</option>
                 <option value="kasir" <?php echo $selected = ($data['level'] == 'kasir')?'selected': '';?>>Kasir</option>
                 <option value="supervisor" <?php echo $selected = ($data['level'] == 'supervisor')?'selected': '';?>>Supervisor</option>
+                <option value="teknisi" <?php echo $selected = ($data['level'] == 'teknisi')?'selected': '';?>>Teknisi</option>
               </select>
             </div>
           </div>

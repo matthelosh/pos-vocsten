@@ -15,13 +15,18 @@
         break;
         case "get_detil_jual":
             $qry = mysqli_query($koneksi, "SELECT * FROM detil_jual JOIN barang ON detil_jual.kd_brg = barang.kd_brg WHERE no_struk = '$_POST[ref]'");
+            $qry1 = mysqli_query($koneksi, "SELECT * FROM tb_pelanggan WHERE id_pelanggan = '$_POST[pelanggan]'");
+
             $getGrnd= mysqli_query($koneksi, "SELECT total_trx AS total FROM trx_jual WHERE no_struk = '$_POST[ref]'");
             $total = mysqli_fetch_assoc($getGrnd);
             $data = [];
+
             while($res = mysqli_fetch_assoc($qry)) {
                 array_push($data, (["kd_brg"=>$res['kd_brg'], "nama_barang"=>$res['nama_barang'], "satuan"=>$res['satuan'], "jml_item"=>$res['jml_item'], "sub_tot"=>$res['sub_total']]));
             }
-            print_r(json_encode(["list"=>$data, "total"=>$total]));
+
+            $rPlg = mysqli_fetch_assoc($qry1);
+            print_r(json_encode(["list"=>$data, "total"=>$total,"pelanggan"=>$rPlg['nama']]));
         break;
         case "get_detil_beli":
             $qli = mysqli_query($koneksi, "SELECT * FROM trx_kulak JOIN barang ON trx_kulak.kd_brg = barang.kd_brg WHERE trx_kulak.kd_struk_kulak = '$_POST[ref]'");

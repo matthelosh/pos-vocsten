@@ -1,4 +1,10 @@
 $(document).ready(function() {
+  
+// window.onbeforeunload=function (e){
+//   var e=e||window.event;if (e) {e.returnValue = 'You turned me on.'; }
+//   return 'You turned me on.';
+// };
+
 
   Number.prototype.pad = function(size) {
     var sign = Math.sign(this) === -1 ? '-' : '';
@@ -199,7 +205,8 @@ $(document).ready(function() {
       success: function(res) {
         if (res.msg === 'item_exists') {
           swal("Info", "Item "+ data.barcode+ " sudah ada dlm keranjang. Untuk menambah / mengurangi, ganti jumlah pada tabel di bawah.", "warning");
-
+          $("input[name='kodepj']").val(res.ref);
+          console.log(res.ref);
           get_tmp_jual();
         } else if (res.msg === 'ok') {
           $('#barcode').val(0);
@@ -255,7 +262,7 @@ $(document).ready(function() {
         $("input[name='hrg_jual']").val("");
         $('#barcode').val("0");
         $(".stok").hide();
-        console.log(res.profits.profits);
+        // console.log(res.profits.profits);
       }
     });
   }
@@ -324,12 +331,16 @@ $(document).ready(function() {
     var jmlItem = '';
     var tanggal = new Date();
     var kasir = document.getElementsByClassName('name');
+    var OP = document.getElementById("pelanggan");
+    var i = OP.selectedIndex;
+    var pelanggan = OP.options[i].text;
     $.ajax({
       type: 'post',
       url: './pages/penjualan/act_penjualan.php',
       data: {
               act:'proses_jual',
               noFaktur: $("input[name='kodepj']").val(),
+              pelanggan: $('#pelanggan').val(),
               tglJual: tanggal.getFullYear()+'-'+(tanggal.getMonth()+1)+'-'+tanggal.getDate(),
               // pelanggan: $('#pelanggan').val(),
               // keterangan: $('#keterangan').val(),
@@ -364,6 +375,8 @@ $(document).ready(function() {
                     `+tanggal.getDate()+`-`+tanggal.getMonth()+`-`+tanggal.getFullYear()+`
                     No.Struk:`+document.getElementById('kodepj').value+`
                     <br>Kasir:`+kasir[0].textContent+` - Untuk Pembeli<br>
+                    Pelanggan:`+ pelanggan+`
+
                     <hr>
                     `+data+`
                     <br><br>
@@ -381,6 +394,7 @@ $(document).ready(function() {
                     `+tanggal.getDate()+`-`+tanggal.getMonth()+`-`+tanggal.getFullYear()+`
                     No.Struk:`+document.getElementById('kodepj').value+`
                     <br>Kasir:`+kasir[0].textContent+` - Untuk Admin<br>
+                    Pelanggan:`+ pelanggan+`
                     <hr>
                     `+data+`
                     <br><br>
@@ -490,12 +504,13 @@ $('.view-detil-jual').on('click', function(){
   var struk = $(this).closest('tr').find('td.ref').text();
   var theUser = $(this).closest('tr').find('td.theUser').text();
   var theTgl = $(this).closest('tr').find('td.theTgl').text();
+  var thePelanggan = $(this).closest('tr').find('td.thePelanggan').text();
   var li_detil = '';
   var grandTot;
   $.ajax({
     type: 'post',
     url: './pages/laporan/act_laporan.php',
-    data: {act: 'get_detil_jual', ref: struk},
+    data: {act: 'get_detil_jual', ref: struk, pelanggan: thePelanggan},
     dataType: 'json',
     success: function (res) {
       res.list.forEach(function(item) {
@@ -509,6 +524,7 @@ $('.view-detil-jual').on('click', function(){
         </tr>`;
       });
       $('#li_detil').html(li_detil);
+      $('.pelanggan').html(res.pelanggan);
       $('#grand_detil').html(res.total.total);
     }
   })
@@ -604,6 +620,7 @@ $('body').on('click', '#btn_print_detil',function(e){
           </td>
         </tr>
       </header>
+      <hr>
       <table border=1>`+detil+`</table>
     </body>
   </html>
@@ -627,6 +644,7 @@ $('#prn_detil_jual').on('click', function(){
   var ref = $('.refModal').text();
   var tgl = document.getElementsByClassName('tanggal');
   var user = $('.petugas');
+  var pelanggan = $('.pelanggan');
   var html = `
   <html>
     <head>
@@ -659,42 +677,50 @@ $('#prn_detil_jual').on('click', function(){
       </head>
     <body>
       <header style="width:80%;margin: auto;">
+        
         <tr>
           <td align=center>
-          <img src=\"images/logo-bpm.jpg\" width=\"75px\" style="position: absolute;top: 25px;left: 15%;">
+          <img src=\"images/logo-bpm.jpg\" width=\"75px\" style="position: absolute;top: 25px;left: 10%;">
           </td>
           <td>
           <h4 class="no-space">Detil Penjualan</h4>
           <h3 class="no-space">BPM SMKN 10 Malang</h3>
           <p class="no-space">Tanggal Pemjualan: `+tgl[0].innerText+`</p>
-          <p class="no-space">Petugas: `+user[0].innerText+`</p>
+          <p class="no-space">Petugas: `+user[0].innerText+` --- Pelanggan: `+pelanggan[0].innerText+`</p>
           <p class="no-space">Nota: <b>`+ref+`</b></p>
           </td>
         </tr>
       </header>
+      <hr>
       <table border=1>`+data+`</table>
     </body>
   </html>`;
   win.document.open();
   win.document.write(html);
-  win.print();
-  win.close();
+  setTimeout(function(){
+    win.print();
+    win.close();
+  }, 500);
+  
 });
 
-
+$('.view-myform').on('click', function(){
+  // $(this).css('cursor', 'pointer');
+  $(this).siblings('.body').children('.myForm').slideToggle();
+});
 // DataTables
     $('.dtTable').DataTable({
       dom: '<"top"Bf><"bottom"rtlp><"clear">',
       buttons: [
           
-        'copy',
+        // 'copy',
         'excel',
-        'csv',
+        // 'csv',
         'pdf',
         'print'
           
       ],
-      "ordering": false
+      // "ordering": false
     });
 
 });

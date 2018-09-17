@@ -8,13 +8,16 @@ switch ($act) {
     $kode = $_POST['barcode'];
     $cektrx = mysqli_query($koneksi, "SELECT * FROM tmp_jual WHERE kd_brg='$kode' AND user='$_POST[user]'");
     if(mysqli_num_rows($cektrx) > 0){
-      print_r(json_encode(["msg"=>"item_exists"]));
+      $item = mysqli_fetch_assoc($cektrx);
+      print_r(json_encode(["msg"=>"item_exists", "ref"=>$item['no_struk']]));
     } else {
       $cek = mysqli_query($koneksi, "SELECT * FROM barang JOIN stok ON barang.kd_brg = stok.id_brg WHERE stok.id_brg = '$kode'");
 
       $item = mysqli_fetch_assoc($cek);
       $profit = $_POST['jml_item']*($item['hrg_jual'] - $item['hrg_modal']);
       $subtotal = $_POST['jml_item'] * $item['hrg_jual'];
+
+
       $sql_insert_tmp = mysqli_query($koneksi, "INSERT INTO tmp_jual (id, no_struk, kd_brg, nama_barang, hrg_modal,hrg_jual, jml_item, satuan, sub_total, profit,user) VALUES(NULL, '$_POST[kodepj]', '$kode', '$item[nama_barang]', '$item[hrg_modal]','$item[hrg_jual]', '$_POST[jml_item]', '$item[satuan]', '$subtotal', '$profit','$_POST[user]' )");
       if(!$sql_insert_tmp){
         die('Error: '. mysqli_error($koneksi));
@@ -101,7 +104,7 @@ switch ($act) {
         // Save to DB
         $no_faktur = filter_input(INPUT_POST, 'noFaktur');
         $tgl_jual = filter_input(INPUT_POST, 'tglJual');
-        // $pelanggan = filter_input(INPUT_POST, 'pelanggan');
+        $pelanggan = filter_input(INPUT_POST, 'pelanggan');
         // $keterangan = filter_input(INPUT_POST, 'keterangan');
         $grand_total = filter_input(INPUT_POST, 'grandTotal');
         $uang_bayar = filter_input(INPUT_POST, 'uangByr');
@@ -109,7 +112,7 @@ switch ($act) {
         $kasir = filter_input(INPUT_POST, 'kasir');
         $lunas = ($uang_bayar >= $grand_total)?'1':'0';
 
-        $sql = "INSERT INTO trx_jual(id, tgl, no_struk, total_trx, total_byr, sisa, lunas, user) VALUES (NULL, '$tgl_jual', '$no_faktur', '$grand_total', '$uang_bayar', '$uang_kembali', '$lunas', '$kasir');";
+        $sql = "INSERT INTO trx_jual(id, tgl, no_struk, total_trx, total_byr, sisa, lunas, pelanggan, user) VALUES (NULL, '$tgl_jual', '$no_faktur', '$grand_total', '$uang_bayar', '$uang_kembali', '$lunas', '$pelanggan','$kasir');";
         $sql .= "INSERT INTO detil_jual(no_struk, kd_brg, jml_item, sub_total, profit) SELECT no_struk, kd_brg, jml_item, sub_total, profit FROM tmp_jual;";
         $sql .= "UPDATE stok dest, (SELECT * FROM tmp_jual) src
                   SET dest.jml = dest.jml - src.jml_item WHERE dest.id_brg = src.kd_brg;";

@@ -83,7 +83,7 @@
                         <caption>Rentang Waktu: <?php echo $startDate .' sampai dengan '.$date; ?></caption>
                             <thead>
                                 <tr>
-                                    <th>Tanggal</th><th>No. Struk</th><th>Sub Total</th><th>Keterangan</th><th>Petugas</th><th>Detil</th>
+                                    <th>Tanggal</th><th>No. Struk</th><th>Sub Total</th><th>Keterangan</th><th>Pelanggan</th><th>Petugas</th><th>Detil</th>
                                 </tr>
                             </thead>
                             <tbody id="dt_lap_jual">
@@ -100,7 +100,7 @@
                                     echo '<tr>
                                         <td class=theTgl>'.$res['tgl'].'</td><td class=ref>'.$res['no_struk'].'</td><td>'.$res['total_trx'].'</td><td>';
                                         echo $ket = ($res['lunas'] == '1')?'Lunas':'Kurang '.$res['sisa'];
-                                    echo  '</td><td class=theUser>'.$res['user'].'</td><td><button class="btn btn-sm bg-pink view-detil-jual" ><i class="material-icons">search</i></button></td>
+                                    echo  '</td><td class=thePelanggan>'.$res['pelanggan'].'</td><td class=theUser>'.$res['user'].'</td><td><button class="btn btn-sm bg-pink view-detil-jual" ><i class="material-icons">search</i></button></td>
                                     </tr>';
                                 }
                             ?>
@@ -119,7 +119,7 @@
     </div>
 </div>
 <div class="modal fade" id="modal-detil-penjualan" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-lg"  role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" id="defaultModalLabel">Detil Penjualan <span class="refModal"></span></h4>
@@ -129,8 +129,11 @@
                                 <div class="col-sm-4">
                                     <p>Petugas: <span class="petugas"></span></p>
                                 </div>
-                                <div class="col-sm-8">
+                                <div class="col-sm-4">
                                     <p>Tanggal Penjualan: <span class="tanggal"></span></p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <p>Pelanggan: <span class="pelanggan"></span></p>
                                 </div>
                             </div>
                             <div class="row">
